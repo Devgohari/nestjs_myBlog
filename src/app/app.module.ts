@@ -12,11 +12,20 @@ import { PostsModule } from '../components/posts/posts.module';
 import { Posts } from '../components/posts/posts.entity';
 import { Comment } from '../components/comments/comment.entity';
 import { CommentsModule } from '../components/comments/comments.module';
+import { MulterModule } from '@nestjs/platform-express/multer';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    MulterModule.register({
+      dest: '../media',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '../media')
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -25,7 +34,7 @@ import { CommentsModule } from '../components/comments/comments.module';
       username: 'postgres',
       password: 'admin',
       database: 'myblog',
-      entities: [Users, Posts, 
+      entities: [Users, Posts,
         Comment
       ],
       synchronize: true,
